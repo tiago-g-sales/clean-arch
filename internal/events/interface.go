@@ -1,6 +1,5 @@
 package events
 
-import "github.com/tiago-g-sales/clean-arch/internal/usecase"
 
 // type EventInterface struct{
 
@@ -11,5 +10,6 @@ type EventDispatcherInterface interface{
 }
 
 type EventInterface interface{
-	SetPayload(dto usecase.OrderOutputDTO)
+	SetPayload(interface{})
+	GetPayload() error
 }
