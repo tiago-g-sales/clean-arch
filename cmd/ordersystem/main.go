@@ -25,7 +25,7 @@ func main() {
 
 	rabbitMQChannel := getRabbitMQChannel()
 
-	eventDispatcher := events.N
+	eventDispatcher := events
 
 }
 
