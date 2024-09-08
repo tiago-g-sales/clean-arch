@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/99designs/gqlgen/graphql"
+	_"github.com/99designs/gqlgen/graphql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/streadway/amqp"
 	"github.com/tiago-g-sales/clean-arch/configs"
 	"github.com/tiago-g-sales/clean-arch/internal/event/handler"
+	_"github.com/tiago-g-sales/clean-arch/internal/infra/graph"
 	"github.com/tiago-g-sales/clean-arch/internal/infra/grpc/pb"
 	"github.com/tiago-g-sales/clean-arch/internal/infra/grpc/service"
 	"github.com/tiago-g-sales/clean-arch/internal/infra/web/webserver"
@@ -59,7 +60,6 @@ func main() {
 	}
 	go grpcServer.Serve(lis)
 
-	srv := 
 
 
 }
