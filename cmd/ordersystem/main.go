@@ -8,6 +8,7 @@ import (
 	"github.com/streadway/amqp"
 	"github.com/tiago-g-sales/clean-arch/configs"
 	"github.com/tiago-g-sales/clean-arch/internal/event/handler"
+	"github.com/tiago-g-sales/clean-arch/internal/infra/web/webserver"
 	"github.com/tiago-g-sales/clean-arch/pkg/events"
 )
 
@@ -30,7 +31,16 @@ func main() {
 	eventDispatcher.Register("OrderCreated", &handler.OrderCreatedHandler{
 		RabbitMQChannel: rabbitMQChannel,
 	})
-	createOrderUseCase := New
+
+	createOrderUseCase := NewCreateOrderUseCase(db, eventDispatcher)
+
+	webserver := webserver.NewWebServer(configs.WebServerPort)
+	webOrderHandler := NewWebOrderHandler(db, eventDispatcher)
+	webserver.AddHandler("/order", webOrderHandler.Create)
+	fmt.Println("Starting web server on port", configs.WebServerPort)
+	go webserver.Start()
+
+	createOrderUseCase.OrderCreated.GetName()
 
 }
 
