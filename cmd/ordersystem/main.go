@@ -3,13 +3,19 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"net"
 
+	"github.com/99designs/gqlgen/graphql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/streadway/amqp"
 	"github.com/tiago-g-sales/clean-arch/configs"
 	"github.com/tiago-g-sales/clean-arch/internal/event/handler"
+	"github.com/tiago-g-sales/clean-arch/internal/infra/grpc/pb"
+	"github.com/tiago-g-sales/clean-arch/internal/infra/grpc/service"
 	"github.com/tiago-g-sales/clean-arch/internal/infra/web/webserver"
 	"github.com/tiago-g-sales/clean-arch/pkg/events"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -40,7 +46,21 @@ func main() {
 	fmt.Println("Starting web server on port", configs.WebServerPort)
 	go webserver.Start()
 
-	createOrderUseCase.OrderCreated.GetName()
+
+	grpcServer := grpc.NewServer()
+	createOrderService := service.NewOrderService(*createOrderUseCase)
+	pb.RegisterOrderServiceServer(grpcServer, createOrderService)
+	reflection.Register(grpcServer)
+	
+	fmt.Println("Starting gRPC server on port", configs.GRPCServerPort)
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", configs.GRPCServerPort))
+	if err != nil {
+		panic(err)
+	}
+	go grpcServer.Serve(lis)
+
+	srv := 
+
 
 }
 
@@ -51,7 +71,7 @@ func getRabbitMQChannel() *amqp.Channel{
 	if err != nil {
 		panic(err)
 	}
-	conn, err := amqp.Dial(fmt.Sprintf("%s://%s:%s@%s:%s/", configs.MQDriver, configs.MQUser, configs.MQHost, configs.MQPort))
+	conn, err := amqp.Dial(fmt.Sprintf("%s://%s:%s@%s:%s/", configs.MQDriver, configs.MQUser, configs.MQUser, configs.MQHost, configs.MQPort))
 	if err != nil {
 		panic(err)
 	}
