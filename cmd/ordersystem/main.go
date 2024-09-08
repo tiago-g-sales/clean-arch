@@ -7,7 +7,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/streadway/amqp"
 	"github.com/tiago-g-sales/clean-arch/configs"
-	"github.com/tiago-g-sales/clean-arch/internal/events"
+	"github.com/tiago-g-sales/clean-arch/internal/event/handler"
+	"github.com/tiago-g-sales/clean-arch/pkg/events"
 )
 
 func main() {
@@ -25,7 +26,11 @@ func main() {
 
 	rabbitMQChannel := getRabbitMQChannel()
 
-	eventDispatcher := events
+	eventDispatcher := events.NewEventDispatcher()
+	eventDispatcher.Register("OrderCreated", &handler.OrderCreatedHandler{
+		RabbitMQChannel: rabbitMQChannel,
+	})
+	createOrderUseCase := New
 
 }
 

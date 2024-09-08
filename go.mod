@@ -4,6 +4,7 @@ go 1.22.3
 
 require (
 	github.com/go-chi/chi/v5 v5.1.0
+	github.com/google/wire v0.6.0
 	github.com/spf13/viper v1.19.0
 	github.com/streadway/amqp v1.1.0
 	github.com/stretchr/testify v1.9.0
