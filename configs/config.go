@@ -12,10 +12,6 @@ type conf struct {
 	WebServerPort     string `mapstructure:"WEB_SERVER_PORT"`
 	GRPCServerPort    string `mapstructure:"GRPC_SERVER_PORT"`
 	GraphQLServerPort string `mapstructure:"GRAPHQL_SERVER_PORT"`
-	MQDriver          string `mapstructure:"MQ_DRIVER"`
-	MQUser			  string `mapstructure:"MQ_USER"`
-	MQHost			  string `mapstructure:"MQ_HOST"`	
-	MQPort 			  string `mapstructure:"MQ_PORT"`
 }
 
 func LoadConfig(path string) (*conf, error) {
