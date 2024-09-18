@@ -2,6 +2,7 @@ package webserver
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -22,7 +23,9 @@ func NewWebServer(serverPort string) *WebServer {
 }
 
 func (s *WebServer) AddHandler(path string, handler http.HandlerFunc) {
+	
 	s.Handlers[path] = handler
+
 }
 
 // loop through the handlers and add them to the router
@@ -31,7 +34,8 @@ func (s *WebServer) AddHandler(path string, handler http.HandlerFunc) {
 func (s *WebServer) Start() {
 	s.Router.Use(middleware.Logger)
 	for path, handler := range s.Handlers {
-		s.Router.Handle(path, handler)
+		parm := strings.Split(path, ",")
+		s.Router.Method(parm[0],parm[1], handler)
 	}
 	http.ListenAndServe(s.WebServerPort, s.Router)
 }

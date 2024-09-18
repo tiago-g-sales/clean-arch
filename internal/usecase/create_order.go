@@ -1,22 +1,12 @@
 package usecase
 
 import (
+	"github.com/tiago-g-sales/clean-arch/internal/domain"
 	"github.com/tiago-g-sales/clean-arch/internal/entity"
 	"github.com/tiago-g-sales/clean-arch/pkg/events"
 )
 
-type OrderInputDTO struct {
-	ID    string  `json:"id"`
-	Price float64 `json:"price"`
-	Tax   float64 `json:"tax"`
-}
 
-type OrderOutputDTO struct {
-	ID         string  `json:"id"`
-	Price      float64 `json:"price"`
-	Tax        float64 `json:"tax"`
-	FinalPrice float64 `json:"final_price"`
-}
 
 type CreateOrderUseCase struct {
 	OrderRepository entity.OrderRepositoryInterface
@@ -36,7 +26,7 @@ func NewCreateOrderUseCase(
 	}
 }
 
-func (c *CreateOrderUseCase) Execute(input OrderInputDTO) (OrderOutputDTO, error) {
+func (c *CreateOrderUseCase) Execute(input domain.OrderInputDTO) ( domain.OrderOutputDTO, error) {
 	order := entity.Order{
 		ID:    input.ID,
 		Price: input.Price,
@@ -44,10 +34,10 @@ func (c *CreateOrderUseCase) Execute(input OrderInputDTO) (OrderOutputDTO, error
 	}
 	order.CalculateFinalPrice()
 	if err := c.OrderRepository.Save(&order); err != nil {
-		return OrderOutputDTO{}, err
+		return domain.OrderOutputDTO{}, err
 	}
 
-	dto := OrderOutputDTO{
+	dto :=domain.OrderOutputDTO{
 		ID:         order.ID,
 		Price:      order.Price,
 		Tax:        order.Tax,

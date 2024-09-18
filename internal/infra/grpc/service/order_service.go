@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	"github.com/tiago-g-sales/clean-arch/internal/domain"
 	"github.com/tiago-g-sales/clean-arch/internal/infra/grpc/pb"
 	"github.com/tiago-g-sales/clean-arch/internal/usecase"
 )
@@ -19,7 +20,7 @@ func NewOrderService(createOrderUseCase usecase.CreateOrderUseCase) *OrderServic
 }
 
 func (s *OrderService) CreateOrder(ctx context.Context, in *pb.CreateOrderRequest) (*pb.CreateOrderResponse, error) {
-	dto := usecase.OrderInputDTO{
+	dto := domain.OrderInputDTO{
 		ID:    in.Id,
 		Price: float64(in.Price),
 		Tax:   float64(in.Tax),
