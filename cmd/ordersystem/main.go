@@ -10,11 +10,14 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/streadway/amqp"
 	"github.com/tiago-g-sales/clean-arch/configs"
+	"github.com/tiago-g-sales/clean-arch/internal/event"
 	"github.com/tiago-g-sales/clean-arch/internal/event/handler"
+	"github.com/tiago-g-sales/clean-arch/internal/infra/database"
 	"github.com/tiago-g-sales/clean-arch/internal/infra/graph"
 	"github.com/tiago-g-sales/clean-arch/internal/infra/grpc/pb"
 	"github.com/tiago-g-sales/clean-arch/internal/infra/grpc/service"
 	"github.com/tiago-g-sales/clean-arch/internal/infra/web/webserver"
+	"github.com/tiago-g-sales/clean-arch/internal/usecase"
 	"github.com/tiago-g-sales/clean-arch/pkg/events"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -43,7 +46,12 @@ func main() {
 	})
 
 	createOrderUseCase := NewCreateOrderUseCase(db, eventDispatcher)
+	
+	orderRepository := database.NewOrderRepository(db)
+	orderCreated := event.NewOrderCreated()
+	listAllOrdersUseCase := usecase.NewListedOrderUseCase(orderRepository, orderCreated, eventDispatcher)
 
+	
   
 	webserver := webserver.NewWebServer(configs.WebServerPort)
 	webOrderHandler := NewWebOrderHandler(db, eventDispatcher)
@@ -56,8 +64,11 @@ func main() {
 	go webserver.Start()
 
 	grpcServer := grpc.NewServer()
-	createOrderService := service.NewOrderService(*createOrderUseCase)
+	createOrderService := service.NewOrderService(*createOrderUseCase, *listAllOrdersUseCase )
+
 	pb.RegisterOrderServiceServer(grpcServer, createOrderService)
+
+	
 	reflection.Register(grpcServer)
 
 	fmt.Println("Starting gRPC server on port", configs.GRPCServerPort)
