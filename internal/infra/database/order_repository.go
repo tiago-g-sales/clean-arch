@@ -14,6 +14,17 @@ func NewOrderRepository(db *sql.DB) *OrderRepository {
 	return &OrderRepository{Db: db}
 }
 
+
+func (r *OrderRepository) CreateTableOrders() error {
+
+	_, err := r.Db.Exec("CREATE TABLE IF NOT EXISTS orders (id varchar(255) NOT NULL, price float NOT NULL, tax float NOT NULL, final_price float NOT NULL, PRIMARY KEY (id))")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+
 func (r *OrderRepository) Save(order *entity.Order) error {
 	stmt, err := r.Db.Prepare("INSERT INTO orders (id, price, tax, final_price) VALUES (?, ?, ?, ?)")
 	if err != nil {

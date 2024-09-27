@@ -9,6 +9,11 @@ type conf struct {
 	DBUser            string `mapstructure:"DB_USER"`
 	DBPassword        string `mapstructure:"DB_PASSWORD"`
 	DBName            string `mapstructure:"DB_NAME"`
+	MQDriver          string `mapstructure:"MQ_DRIVER"`
+	MQUser            string `mapstructure:"MQ_USER"`
+	MQPassword        string `mapstructure:"MQ_PASSWORD"`
+	MQHost            string `mapstructure:"MQ_HOST"`
+	MQPort            string `mapstructure:"MQ_PORT"`
 	WebServerPort     string `mapstructure:"WEB_SERVER_PORT"`
 	GRPCServerPort    string `mapstructure:"GRPC_SERVER_PORT"`
 	GraphQLServerPort string `mapstructure:"GRAPHQL_SERVER_PORT"`

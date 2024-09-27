@@ -44,9 +44,5 @@ func (c *ListOrderUseCase) Execute() ( []*domain.OrderOutputDTO, error) {
 		ordersResponse = append(ordersResponse, &dto)
 	} 
 
-
-	//c.OrderListed.SetPayload(ordersResponse)
-	//c.EventDispatcher.Dispatch(c.OrderListed)
-
 	return ordersResponse, nil
 }

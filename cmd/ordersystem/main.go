@@ -16,6 +16,7 @@ import (
 	"github.com/tiago-g-sales/clean-arch/internal/infra/graph"
 	"github.com/tiago-g-sales/clean-arch/internal/infra/grpc/pb"
 	"github.com/tiago-g-sales/clean-arch/internal/infra/grpc/service"
+	"github.com/tiago-g-sales/clean-arch/internal/infra/web"
 	"github.com/tiago-g-sales/clean-arch/internal/infra/web/webserver"
 	"github.com/tiago-g-sales/clean-arch/internal/usecase"
 	"github.com/tiago-g-sales/clean-arch/pkg/events"
@@ -37,6 +38,12 @@ func main() {
 		panic(err)
 	}
 	defer db.Close()
+	
+	orderRepository := database.NewOrderRepository(db)
+	err = orderRepository.CreateTableOrders()
+	if err != nil {
+		panic(err)
+	}
 
 	rabbitMQChannel := getRabbitMQChannel()
 
@@ -45,16 +52,14 @@ func main() {
 		RabbitMQChannel: rabbitMQChannel,
 	})
 
-	createOrderUseCase := NewCreateOrderUseCase(db, eventDispatcher)
-	
-	orderRepository := database.NewOrderRepository(db)
 	orderCreated := event.NewOrderCreated()
+	webOrderHandler := web.NewWebOrderHandler(eventDispatcher, orderRepository, orderCreated)
+	createOrderUseCase := usecase.NewCreateOrderUseCase(orderRepository, orderCreated, eventDispatcher)
 	listAllOrdersUseCase := usecase.NewListedOrderUseCase(orderRepository, orderCreated, eventDispatcher)
 
 	
-  
+
 	webserver := webserver.NewWebServer(configs.WebServerPort)
-	webOrderHandler := NewWebOrderHandler(db, eventDispatcher)
 	webserver.AddHandler("POST", "/order", webOrderHandler.Create)
 	webserver.AddHandler("GET", "/order",webOrderHandler.ListAll)
 
@@ -89,7 +94,12 @@ func main() {
 }
 
 func getRabbitMQChannel() *amqp.Channel {
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	
+	configs, err := configs.LoadConfig(".")
+	if err != nil {
+		panic(err)
+	}
+	conn, err := amqp.Dial(fmt.Sprintf("%s://%s:%s@%s:%s/",configs.MQDriver ,configs.MQUser, configs.MQPassword, configs.MQHost, configs.MQPort ))
 	if err != nil {
 		panic(err)
 	}
