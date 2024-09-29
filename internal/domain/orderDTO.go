@@ -12,5 +12,3 @@ type OrderInputDTO struct {
 	Price float64 `json:"price"`
 	Tax   float64 `json:"tax"`
 }
-
-

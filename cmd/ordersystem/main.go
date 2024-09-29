@@ -38,7 +38,7 @@ func main() {
 		panic(err)
 	}
 	defer db.Close()
-	
+
 	orderRepository := database.NewOrderRepository(db)
 	err = orderRepository.CreateTableOrders()
 	if err != nil {
@@ -57,23 +57,18 @@ func main() {
 	createOrderUseCase := usecase.NewCreateOrderUseCase(orderRepository, orderCreated, eventDispatcher)
 	listAllOrdersUseCase := usecase.NewListedOrderUseCase(orderRepository, orderCreated, eventDispatcher)
 
-	
-
 	webserver := webserver.NewWebServer(configs.WebServerPort)
 	webserver.AddHandler("POST", "/order", webOrderHandler.Create)
-	webserver.AddHandler("GET", "/order",webOrderHandler.ListAll)
-
-
+	webserver.AddHandler("GET", "/order", webOrderHandler.ListAll)
 
 	fmt.Println("Starting web server on port", configs.WebServerPort)
 	go webserver.Start()
 
 	grpcServer := grpc.NewServer()
-	createOrderService := service.NewOrderService(*createOrderUseCase, *listAllOrdersUseCase )
+	createOrderService := service.NewOrderService(*createOrderUseCase, *listAllOrdersUseCase)
 
 	pb.RegisterOrderServiceServer(grpcServer, createOrderService)
 
-	
 	reflection.Register(grpcServer)
 
 	fmt.Println("Starting gRPC server on port", configs.GRPCServerPort)
@@ -84,7 +79,7 @@ func main() {
 	go grpcServer.Serve(lis)
 
 	srv := graphql_handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{
-		CreateOrderUseCase: *createOrderUseCase,
+		CreateOrderUseCase:  *createOrderUseCase,
 		ListAllOrderUseCase: *listAllOrdersUseCase,
 	}}))
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
@@ -95,12 +90,12 @@ func main() {
 }
 
 func getRabbitMQChannel() *amqp.Channel {
-	
+
 	configs, err := configs.LoadConfig(".")
 	if err != nil {
 		panic(err)
 	}
-	conn, err := amqp.Dial(fmt.Sprintf("%s://%s:%s@%s:%s/",configs.MQDriver ,configs.MQUser, configs.MQPassword, configs.MQHost, configs.MQPort ))
+	conn, err := amqp.Dial(fmt.Sprintf("%s://%s:%s@%s:%s/", configs.MQDriver, configs.MQUser, configs.MQPassword, configs.MQHost, configs.MQPort))
 	if err != nil {
 		panic(err)
 	}

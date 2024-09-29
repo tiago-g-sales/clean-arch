@@ -38,10 +38,10 @@ func (r *queryResolver) ListOrders(ctx context.Context) ([]*model.Order, error) 
 	var ordersModel []*model.Order
 	for _, order := range orders {
 		ordersModel = append(ordersModel, &model.Order{
-			ID:          order.ID,
-			Price: 		 order.Price,
-			Tax: 		 order.Tax,
-			FinalPrice:  order.FinalPrice,
+			ID:         order.ID,
+			Price:      order.Price,
+			Tax:        order.Tax,
+			FinalPrice: order.FinalPrice,
 		})
 	}
 	return ordersModel, nil
@@ -55,5 +55,3 @@ func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
-
-

@@ -7,9 +7,9 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
-type MethodPath struct{
-	Method     string
-	Path       string    
+type MethodPath struct {
+	Method string
+	Path   string
 }
 
 type WebServer struct {
@@ -27,19 +27,15 @@ func NewWebServer(serverPort string) *WebServer {
 }
 
 func (s *WebServer) AddHandler(method string, path string, handler http.HandlerFunc) {
-	
+
 	s.Handlers[MethodPath{Method: method, Path: path}] = handler
 
 }
 
-
 func (s *WebServer) Start() {
 	s.Router.Use(middleware.Logger)
 	for methodpath, handler := range s.Handlers {
-		s.Router.Method( methodpath.Method , methodpath.Path, handler)
+		s.Router.Method(methodpath.Method, methodpath.Path, handler)
 	}
 	http.ListenAndServe(s.WebServerPort, s.Router)
 }
-
-
-

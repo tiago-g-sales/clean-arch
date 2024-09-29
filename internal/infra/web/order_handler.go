@@ -49,8 +49,6 @@ func (h *WebOrderHandler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
-
 func (h *WebOrderHandler) ListAll(w http.ResponseWriter, r *http.Request) {
 
 	listedOrder := usecase.NewListedOrderUseCase(h.OrderRepository, h.OrderCreatedEvent, h.EventDispatcher)

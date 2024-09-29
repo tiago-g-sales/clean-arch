@@ -8,10 +8,9 @@ import (
 
 type ListOrderUseCase struct {
 	OrderRepository entity.OrderRepositoryInterface
-	OrderListed    events.EventInterface
+	OrderListed     events.EventInterface
 	EventDispatcher events.EventDispatcherInterface
 }
-
 
 func NewListedOrderUseCase(
 	OrderRepository entity.OrderRepositoryInterface,
@@ -20,13 +19,12 @@ func NewListedOrderUseCase(
 ) *ListOrderUseCase {
 	return &ListOrderUseCase{
 		OrderRepository: OrderRepository,
-		OrderListed:    OrderListed,
+		OrderListed:     OrderListed,
 		EventDispatcher: EventDispatcher,
 	}
 }
 
-
-func (c *ListOrderUseCase) Execute() ( []*domain.OrderOutputDTO, error) {
+func (c *ListOrderUseCase) Execute() ([]*domain.OrderOutputDTO, error) {
 
 	listOrders, err := c.OrderRepository.FindAll()
 	if err != nil {
@@ -35,14 +33,14 @@ func (c *ListOrderUseCase) Execute() ( []*domain.OrderOutputDTO, error) {
 	var ordersResponse []*domain.OrderOutputDTO
 
 	for _, order := range listOrders {
-		dto :=domain.OrderOutputDTO{
+		dto := domain.OrderOutputDTO{
 			ID:         order.ID,
 			Price:      order.Price,
 			Tax:        order.Tax,
 			FinalPrice: order.FinalPrice,
-		}	
+		}
 		ordersResponse = append(ordersResponse, &dto)
-	} 
+	}
 
 	return ordersResponse, nil
 }

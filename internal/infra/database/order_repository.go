@@ -14,7 +14,6 @@ func NewOrderRepository(db *sql.DB) *OrderRepository {
 	return &OrderRepository{Db: db}
 }
 
-
 func (r *OrderRepository) CreateTableOrders() error {
 
 	_, err := r.Db.Exec("CREATE TABLE IF NOT EXISTS orders (id varchar(255) NOT NULL, price float NOT NULL, tax float NOT NULL, final_price float NOT NULL, PRIMARY KEY (id))")
@@ -23,7 +22,6 @@ func (r *OrderRepository) CreateTableOrders() error {
 	}
 	return nil
 }
-
 
 func (r *OrderRepository) Save(order *entity.Order) error {
 	stmt, err := r.Db.Prepare("INSERT INTO orders (id, price, tax, final_price) VALUES (?, ?, ?, ?)")
@@ -46,8 +44,7 @@ func (r *OrderRepository) GetTotal() (int, error) {
 	return total, nil
 }
 
-
-func(r *OrderRepository)FindAll() ([]entity.Order, error) {
+func (r *OrderRepository) FindAll() ([]entity.Order, error) {
 
 	rows, err := r.Db.Query("SELECT id, price, tax, final_price FROM orders")
 	if err != nil {
@@ -58,14 +55,13 @@ func(r *OrderRepository)FindAll() ([]entity.Order, error) {
 	for rows.Next() {
 
 		var id string
-		var  price, tax, final_price float64
+		var price, tax, final_price float64
 
 		if err := rows.Scan(&id, &price, &tax, &final_price); err != nil {
 			return nil, err
 		}
-		listOrder = append(listOrder, entity.Order{ID: id, Price: price, Tax: tax, FinalPrice: final_price })
+		listOrder = append(listOrder, entity.Order{ID: id, Price: price, Tax: tax, FinalPrice: final_price})
 
 	}
 	return listOrder, nil
 }
-

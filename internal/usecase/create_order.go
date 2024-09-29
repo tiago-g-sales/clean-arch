@@ -6,8 +6,6 @@ import (
 	"github.com/tiago-g-sales/clean-arch/pkg/events"
 )
 
-
-
 type CreateOrderUseCase struct {
 	OrderRepository entity.OrderRepositoryInterface
 	OrderCreated    events.EventInterface
@@ -26,7 +24,7 @@ func NewCreateOrderUseCase(
 	}
 }
 
-func (c *CreateOrderUseCase) Execute(input domain.OrderInputDTO) ( domain.OrderOutputDTO, error) {
+func (c *CreateOrderUseCase) Execute(input domain.OrderInputDTO) (domain.OrderOutputDTO, error) {
 	order := entity.Order{
 		ID:    input.ID,
 		Price: input.Price,
@@ -37,7 +35,7 @@ func (c *CreateOrderUseCase) Execute(input domain.OrderInputDTO) ( domain.OrderO
 		return domain.OrderOutputDTO{}, err
 	}
 
-	dto :=domain.OrderOutputDTO{
+	dto := domain.OrderOutputDTO{
 		ID:         order.ID,
 		Price:      order.Price,
 		Tax:        order.Tax,

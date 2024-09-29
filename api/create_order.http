@@ -3,7 +3,57 @@ Host: localhost:8000
 Content-Type: application/json
 
 {
-    "id":"PPPPPPP",
+    "id":"order 1",
     "price": 10.5,
     "tax": 0.9
 }
+
+#################################################
+
+POST http://localhost:8000/order HTTP/1.1
+Host: localhost:8000
+Content-Type: application/json
+
+{
+    "id":"order 2",
+    "price": 1.5,
+    "tax": 2.0
+}
+
+
+#################################################
+
+POST http://localhost:8000/order HTTP/1.1
+Host: localhost:8000
+Content-Type: application/json
+
+{
+    "id":"order 3",
+    "price": 100.5,
+    "tax": 20.0
+}
+
+#################################################
+
+POST http://localhost:8000/order HTTP/1.1
+Host: localhost:8000
+Content-Type: application/json
+
+{
+    "id":"order 4",
+    "price": 2.5,
+    "tax": 3.0
+}
+
+#################################################
+
+POST http://localhost:8000/order HTTP/1.1
+Host: localhost:8000
+Content-Type: application/json
+
+{
+    "id":"order 5",
+    "price": 10.9,
+    "tax": 4.0
+}
+
