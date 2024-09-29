@@ -6,6 +6,7 @@ import "github.com/tiago-g-sales/clean-arch/internal/usecase"
 //
 // It serves as dependency injection for your app, add any dependencies you require here.
 
-type Resolver struct {
+type Resolver struct{
 	CreateOrderUseCase usecase.CreateOrderUseCase
+	ListAllOrderUseCase usecase.ListOrderUseCase
 }
