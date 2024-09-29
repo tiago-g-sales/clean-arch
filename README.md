@@ -4,7 +4,7 @@ Aplicação em Go sendo:
   - Servidor HTTP Rest
   - Servidor GraphQL 
   - Servidor gRPC 
-  rodando em Multithreads com Clean Archictecture
+  **rodando em Multithreads com Clean Archictecture**
 
 ## Funcionalidades
 
